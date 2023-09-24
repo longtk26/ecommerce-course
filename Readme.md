@@ -9,8 +9,8 @@
 2. Sử dụng cách connect mới, khuyên dùng
    \_ Sử dụng Creational pattern - Singleton
    \_ Singleton đảm bảo rằng một class chỉ có một đối tượng
-3. Kiểm tra hệ thống có bao nhiêu connect
-4. Phát hiện connect đến hệ thống quá tải
+3. Kiểm tra hệ thống có bao nhiêu connect --> helper
+4. Phát hiện connect đến hệ thống quá tải --> helper
 5. Không cần disconnect liên tục trong mongodb
 6. Poolsize là gì? Tại sao lại quan trọng ?
    \_ Trong mongoose nhóm kết nối là tập hợp các kết nối của cơ sở dữ liệu mà có thể tái sử dụng được

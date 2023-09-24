@@ -1,15 +1,21 @@
 import mongoose from "mongoose";
 import { countConnect } from "../helpers/check.connect";
-const connectString = process.env.MONGODB_CONNECT_STRING;
+import config from "../configs/config.mongodb";
+
+const {
+  db: { host, port, name },
+} = config;
+
+const connectString = `mongodb://${host}:${port}/${name}`;
 
 class Database {
-  static instance: Database;
+  private static instance: Database;
 
-  constructor() {
+  private constructor() {
     this.connect();
   }
 
-  connect(type = "mongodb") {
+  public connect(type = "mongodb") {
     if (1 === 1) {
       mongoose.set("debug", true);
       mongoose.set("debug", { color: true });
@@ -24,7 +30,7 @@ class Database {
       .catch(() => console.log("Error connecting to Mongo"));
   }
 
-  static getInstance() {
+  public static getInstance(): Database {
     if (!Database.instance) {
       Database.instance = new Database();
     }
@@ -34,5 +40,4 @@ class Database {
 }
 
 const instanceMongodb = Database.getInstance();
-
 export default instanceMongodb;
