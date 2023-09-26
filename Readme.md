@@ -18,3 +18,11 @@
    --> Nhiệm vụ: Đọc singleton, os và process trong nodejs
 
 ## Day 3: ENV config
+
+## Day 4: API Sign up
+
+1. Dùng http client cho việc test API
+2. Tổ chức routes theo cấp thư mục
+3. Dùng class để viết controller
+4. Khi dùng try catch, ta nên quy định các code để chỉ rõ lỗi cụ thể
+5. Dùng publicKey và privateKey

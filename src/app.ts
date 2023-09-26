@@ -4,6 +4,8 @@ import helmet from "helmet";
 import compression from "compression";
 import "dotenv/config";
 
+import indexRoute from "./routes";
+
 const app = express();
 
 // init middleware
@@ -17,11 +19,7 @@ app.use(compression());
 import "./dbs/init.mongodb";
 
 // init routes
-app.get("/", (req, res) => {
-  res.status(200).json({
-    message: "Welcome to ecommerce API!",
-  });
-});
+app.use("/", indexRoute);
 
 // handle error
 
