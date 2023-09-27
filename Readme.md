@@ -26,3 +26,16 @@
 3. Dùng class để viết controller
 4. Khi dùng try catch, ta nên quy định các code để chỉ rõ lỗi cụ thể
 5. Dùng publicKey và privateKey
+
+## Day5: API sign up
+
+1. Tìm hiểu JWT là gì ?
+2. Tại sao lại dùng JWT ?
+3. accessToken và refreshToken, tại sao cần dùng cả hai ?
+4. Hoạt động của publicKey và privateKey cùng thuật toán bất đối xứng
+5. Quy trình khi thực hiện một chức năng sign up
+
+   -- Kiểm tra sự tồn tại của email.
+   -- Hash password và lưu tài khoản mới vào db (nhớ kiểm tra lỗi khi tạo).
+   -- Sử dụng privateKey và publicKey để tạo accessToken và refreshToken (lưu trữ publicKey và privateKey trong db, trường hợp dùng thuật toán bất đối xứng chỉ cần lưu publicKey).
+   -- Trả về cho người dùng token và những thông tin cần thiết.
