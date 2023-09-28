@@ -39,3 +39,9 @@
    -- Hash password và lưu tài khoản mới vào db (nhớ kiểm tra lỗi khi tạo).
    -- Sử dụng privateKey và publicKey để tạo accessToken và refreshToken (lưu trữ publicKey và privateKey trong db, trường hợp dùng thuật toán bất đối xứng chỉ cần lưu publicKey).
    -- Trả về cho người dùng token và những thông tin cần thiết.
+
+## Day 6: Middleware API Key and permissions
+
+1. Tạo apiKey model để lưu trữ trạng thái và quyền hạn của các api key
+2. Kiểm tra req có kèm api key không --> Kiểm tra key có tồn tại trong db không --> next
+3. Kiểm tra permission của apiKey có tồn tại không --> Nếu có kiểm tra xem permission đó có tồn tại hợp lệ với những permissions của apiKey được gửi không

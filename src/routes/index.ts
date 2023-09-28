@@ -1,17 +1,15 @@
 import { Router } from "express";
 import accessRoute from "./access";
+import { apiKey, permission } from "../auth/checkAuth";
 
 const indexRoute = Router();
 
-// Main routes
+// check API key
+indexRoute.use(apiKey);
+
+// check permission
+indexRoute.use(permission("1111"));
 
 indexRoute.use("/v1/api", accessRoute);
-
-// Welcome to API
-indexRoute.get("/", (req, res) => {
-  res.status(200).json({
-    message: "Welcome to ecommerce API!",
-  });
-});
 
 export default indexRoute;
