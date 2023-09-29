@@ -8,7 +8,7 @@ const indexRoute = Router();
 indexRoute.use(apiKey);
 
 // check permission
-indexRoute.use(permission("1111"));
+indexRoute.use(permission("0000"));
 
 indexRoute.use("/v1/api", accessRoute);
 
