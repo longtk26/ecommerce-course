@@ -45,3 +45,11 @@
 1. Tạo apiKey model để lưu trữ trạng thái và quyền hạn của các api key
 2. Kiểm tra req có kèm api key không --> Kiểm tra key có tồn tại trong db không --> next
 3. Kiểm tra permission của apiKey có tồn tại không --> Nếu có kiểm tra xem permission đó có tồn tại hợp lệ với những permissions của apiKey được gửi không
+
+## Day 7: Xử lý Error Handler trong API
+
+1. Hạn chế dùng try catch
+2. Catch error của controller bằng middleware (asyncHandler)
+3. Custome error message và success message trong thư mục core
+4. Catch error khi routes not found
+5. Sử dụng error middleware function của express để catch error

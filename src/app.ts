@@ -3,6 +3,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import compression from "compression";
 import "dotenv/config";
+import { Request, Response, NextFunction } from "express";
 
 import indexRoute from "./routes";
 
@@ -22,5 +23,22 @@ import "./dbs/init.mongodb";
 app.use("/", indexRoute);
 
 // handle error
+
+app.use((req, res, next) => {
+  const error = new Error("Not Found") as any;
+
+  error.status = 404;
+  next(error);
+});
+
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+  const statusCode = error.status || 500;
+
+  return res.status(statusCode).json({
+    status: "error",
+    code: statusCode,
+    message: error.message || "Internal server error",
+  });
+});
 
 export default app;
