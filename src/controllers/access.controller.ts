@@ -3,6 +3,15 @@ import AccessService from "../services/access.service";
 import { CREATED, SuccessReponse } from "../core/success.response";
 
 class AccessController {
+  async logout(req: Request, res: Response) {
+    const data = await AccessService.logout(req.keyStore);
+
+    new SuccessReponse({
+      message: "Logout OK!",
+      metadata: data!,
+    }).send(res);
+  }
+
   async login(req: Request, res: Response) {
     const data = await AccessService.login(req.body);
 

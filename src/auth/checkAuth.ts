@@ -4,7 +4,7 @@ import { BadRequestError } from "../core/error.response";
 
 const HEADER = {
   API_KEY: "x-api-key",
-  AUTHORIZATION: "athorization",
+  AUTHORIZATION: "authorization",
 };
 
 export const apiKey = async (
@@ -47,13 +47,5 @@ export const permission = (permission: string) => {
     }
 
     return next();
-  };
-};
-
-export const asyncHandler = (
-  fn: (req: Request, res: Response, next: NextFunction) => Promise<any>
-) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    fn(req, res, next).catch(next);
   };
 };

@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 import keytokenModel from "../models/keytoken.model";
 import { KeyTokenTypes } from "../types/services/keyToken.types";
 
@@ -38,6 +40,14 @@ class KeyTokenService {
     } catch (error) {
       return error;
     }
+  }
+
+  static async findByUserId(userId: Types.ObjectId) {
+    return await keytokenModel.findOne({ user: userId }).lean();
+  }
+
+  static async removeKeyById(id: Types.ObjectId) {
+    return await keytokenModel.findByIdAndRemove(id).lean();
   }
 }
 
