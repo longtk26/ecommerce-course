@@ -53,3 +53,12 @@
 3. Custome error message và success message trong thư mục core
 4. Catch error khi routes not found
 5. Sử dụng error middleware function của express để catch error
+
+## Day 8: Login và logout
+
+1. Login flow
+   - Kiểm tra sự tồn tại của email
+   - Kiểm tra match password
+   - Tạo AT,RT,PubK, PriK
+   - Lưu RT, Pubk và PriK vào DB
+   - Return thông tin user về client

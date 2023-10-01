@@ -1,11 +1,12 @@
 import shopModel from "../models/shop.model";
 import bcrypt from "bcrypt";
-import crypto from "crypto";
 
 import KeyTokenService from "./keyToken.service";
 import { createTokenPair } from "../auth/authUtils";
-import { getInfoData } from "../utils";
-import { BadRequestError } from "../core/error.response";
+import { createPublicAndPrivateKey, getInfoData } from "../utils";
+import { AuthFailureError, BadRequestError } from "../core/error.response";
+import { SignInTypes, SignUpTypes } from "../types/services/access.types";
+import { findByEmail } from "./shop.service";
 
 const RoleShop = {
   SHOP: "SHOP",
@@ -15,15 +16,42 @@ const RoleShop = {
 };
 
 class AccessService {
-  static async signup({
-    email,
-    name,
-    password,
-  }: {
-    email: string;
-    name: string;
-    password: string;
-  }) {
+  static async login({ email, password, refreshToken = null }: SignInTypes) {
+    // Check shop exist
+    const foundShop = await findByEmail({ email });
+    if (!foundShop) throw new BadRequestError("Shop not registered!");
+
+    // Check match password
+    const match = await bcrypt.compare(password, foundShop.password);
+    if (!match) throw new AuthFailureError("Invalid credential!");
+
+    // Create token pair
+    const { publicKey, privateKey } = createPublicAndPrivateKey();
+
+    const tokens = await createTokenPair(
+      { userId: foundShop._id, email },
+      publicKey,
+      privateKey
+    );
+
+    // save publicKey and refreshToken to DB
+    await KeyTokenService.createKeyToken({
+      userId: foundShop._id,
+      publicKey,
+      privateKey,
+      refreshToken: tokens.refreshToken,
+    });
+
+    return {
+      shop: getInfoData({
+        fields: ["_id", "name", "email"],
+        object: foundShop,
+      }),
+      tokens,
+    };
+  }
+
+  static async signup({ email, name, password }: SignUpTypes) {
     // step1: Check exist email
     const emailExist = await shopModel.findOne({ email }).lean();
 
@@ -42,19 +70,7 @@ class AccessService {
 
     if (newShop) {
       // create private key and public key
-      const publicKey = crypto.randomBytes(64).toString("hex");
-      const privateKey = crypto.randomBytes(64).toString("hex");
-
-      // save publicKey to DB
-      const keyStore = await KeyTokenService.createKeyToken({
-        userId: newShop._id,
-        publicKey,
-        privateKey,
-      });
-
-      if (!keyStore) {
-        throw new BadRequestError("Key store error!");
-      }
+      const { publicKey, privateKey } = createPublicAndPrivateKey();
 
       // Created tokens pair
       const tokens = await createTokenPair(
@@ -63,15 +79,24 @@ class AccessService {
         privateKey
       );
 
+      // save publicKey and refreshToken to DB
+      const keyStore = await KeyTokenService.createKeyToken({
+        userId: newShop._id,
+        publicKey,
+        privateKey,
+        refreshToken: tokens.refreshToken,
+      });
+
+      if (!keyStore) {
+        throw new BadRequestError("Key store error!");
+      }
+
       return {
-        code: 201,
-        metadata: {
-          shop: getInfoData({
-            fields: ["_id", "name", "email"],
-            object: newShop,
-          }),
-          tokens,
-        },
+        shop: getInfoData({
+          fields: ["_id", "name", "email"],
+          object: newShop,
+        }),
+        tokens,
       };
     }
 

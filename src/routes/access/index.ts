@@ -6,5 +6,6 @@ const accessRoute = Router();
 
 // Sign up
 accessRoute.post("/shop/signup", asyncHandler(accessController.signUp));
+accessRoute.post("/shop/login", asyncHandler(accessController.login));
 
 export default accessRoute;

@@ -1,14 +1,9 @@
 import { Response } from "express";
 
-const StatusCode = {
-  OK: 200,
-  CREATED: 201,
-};
+import { CREATEDResponseType, OKResponseType } from "../types/core";
+import { httpStatusCode } from "../utils/httpStatusCode";
 
-const ReasonStatusCode = {
-  OK: "Success!",
-  CREATED: "Created!",
-};
+const { StatusCode, ReasonPhrases } = httpStatusCode;
 
 class SuccessReponse {
   private message: string;
@@ -18,7 +13,7 @@ class SuccessReponse {
   constructor({
     message = "",
     statusCode = StatusCode.OK,
-    reasonStatusCode = ReasonStatusCode.OK,
+    reasonStatusCode = ReasonPhrases.OK,
     metadata = {},
   }) {
     this.message = !message ? reasonStatusCode : message;
@@ -32,7 +27,7 @@ class SuccessReponse {
 }
 
 class OK extends SuccessReponse {
-  constructor({ message, metadata }: { message: string; metadata: any }) {
+  constructor({ message, metadata }: OKResponseType) {
     super({ message, metadata });
   }
 }
@@ -43,19 +38,13 @@ class CREATED extends SuccessReponse {
   constructor({
     message,
     statusCode = StatusCode.CREATED,
-    reasonStatusCode = ReasonStatusCode.CREATED,
+    reasonStatusCode = ReasonPhrases.CREATED,
     metadata,
     options,
-  }: {
-    message: string;
-    metadata: any;
-    statusCode?: number;
-    reasonStatusCode?: string;
-    options?: any;
-  }) {
+  }: CREATEDResponseType) {
     super({ message, statusCode, reasonStatusCode, metadata });
     this.options = options;
   }
 }
 
-export { OK, CREATED };
+export { OK, CREATED, SuccessReponse };
