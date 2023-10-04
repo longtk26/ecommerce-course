@@ -68,10 +68,16 @@
    - Authenticate user before logging out (Viết middleware)
    - Các bước viết middleware khi logout
    * Check userId missing
-   * Get accessToken
+   * Get refreshToken
    * Verify token
    * Check user in dbs
    * Check keyStore with this userId
    * OK all --> return next() mang theo keyStore
    - Viết removeKey service
-   - Luôn phải mang theo: API key, userId, accessToken khi muốn logout
+   - Luôn phải mang theo: API key, userId, refreshToken khi muốn logout
+
+## Day 9: Handle refresh token
+
+1.  Kiểm tra refreshToken có nằm trong blacklist không --> hủy token yêu cầu đăng nhập lại
+2.  Nếu refreshToken hợp lệ --> Tìm user hợp lệ của hệ thống
+3.  Trả về cặp token mới

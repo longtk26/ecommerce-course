@@ -9,6 +9,7 @@ const HEADER = {
   API_KEY: "x-api-key",
   CLIENT_ID: "x-client-id",
   AUTHORIZATION: "authorization",
+  REFRESHTOKEN: "x-rtoken-id",
 };
 
 export const createTokenPair = async (
@@ -35,7 +36,7 @@ export const createTokenPair = async (
 export const authentication = asyncHandler(async (req, res, next) => {
   /**
    * 1. Check userId missing
-   * 2. Get accessToken
+   * 2. Get refreshToken
    * 3. Verify token
    * 4. Check user in dbs
    * 5. Check keyStore with this userId
@@ -48,21 +49,28 @@ export const authentication = asyncHandler(async (req, res, next) => {
   const keyStore = await KeyTokenService.findByUserId(userId);
   if (!keyStore) throw new NotFoundError("Not found keystore!");
 
-  const accessToken = req.headers[HEADER.AUTHORIZATION] as string;
-  if (!accessToken) throw new AuthFailureError("Invalid request!");
+  const refreshToken = req.headers[HEADER.REFRESHTOKEN] as string;
+  if (refreshToken) {
+    try {
+      const decodeUser = jwt.verify(
+        refreshToken,
+        keyStore.privateKey
+      ) as JwtPayload;
 
-  try {
-    const decodeUser = jwt.verify(
-      accessToken,
-      keyStore.publicKey
-    ) as JwtPayload;
+      if (userId !== decodeUser.userId)
+        throw new AuthFailureError("Invalid user!");
 
-    if (userId !== decodeUser.userId)
-      throw new AuthFailureError("Invalid user!");
+      req.keyStore = keyStore;
+      req.user = decodeUser;
+      req.refreshToken = refreshToken;
 
-    req.keyStore = keyStore;
-    return next();
-  } catch (error) {
-    throw error;
+      return next();
+    } catch (error) {
+      throw error;
+    }
   }
 });
+
+export const verifyJWT = (token: string, keyScret: string) => {
+  return jwt.verify(token, keyScret) as JwtPayload;
+};

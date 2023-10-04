@@ -13,5 +13,9 @@ accessRoute.post("/shop/login", asyncHandler(accessController.login));
 accessRoute.use(authentication);
 ////////////////////////////
 accessRoute.post("/shop/logout", asyncHandler(accessController.logout));
+accessRoute.post(
+  "/shop/handleRefreshToken",
+  asyncHandler(accessController.handleRefreshToken)
+);
 
 export default accessRoute;

@@ -4,8 +4,16 @@ import bcrypt from "bcrypt";
 import KeyTokenService from "./keyToken.service";
 import { createTokenPair } from "../auth/authUtils";
 import { createPublicAndPrivateKey, getInfoData } from "../utils";
-import { AuthFailureError, BadRequestError } from "../core/error.response";
-import { SignInTypes, SignUpTypes } from "../types/services/access.types";
+import {
+  AuthFailureError,
+  BadRequestError,
+  ForbiddenError,
+} from "../core/error.response";
+import {
+  HandleRefreshTokenTypes,
+  SignInTypes,
+  SignUpTypes,
+} from "../types/services/access.types";
 import { findByEmail } from "./shop.service";
 
 const RoleShop = {
@@ -16,6 +24,44 @@ const RoleShop = {
 };
 
 class AccessService {
+  static async handleRefreshToken({
+    refreshToken,
+    user,
+    keyStore,
+  }: HandleRefreshTokenTypes) {
+    const { userId, email } = user;
+
+    if (keyStore.refreshTokensUsed.includes(refreshToken)) {
+      await KeyTokenService.deleteByUserId(user.userId);
+      throw new ForbiddenError("Something wrong happened! Please re-login");
+    }
+
+    if (keyStore.refreshToken !== refreshToken)
+      throw new AuthFailureError("Shop not registered!");
+
+    // Create a new pair tokens
+    const tokens = await createTokenPair(
+      { userId, email },
+      keyStore.publicKey,
+      keyStore.privateKey
+    );
+
+    // update tokens
+    await keyStore.updateOne({
+      $set: {
+        refreshToken: tokens.refreshToken,
+      },
+      $addToSet: {
+        refreshTokensUsed: refreshToken,
+      },
+    });
+
+    return {
+      user,
+      tokens,
+    };
+  }
+
   static async logout(keyStore: any) {
     const delKey = await KeyTokenService.removeKeyById(keyStore._id);
 
