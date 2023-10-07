@@ -47,7 +47,7 @@ export const authentication = asyncHandler(async (req, res, next) => {
   if (!userId) throw new AuthFailureError("Invalid request!");
 
   const keyStore = await KeyTokenService.findByUserId(userId);
-  if (!keyStore) throw new NotFoundError("Not found keystore!");
+  if (!keyStore) throw new NotFoundError("Please login or register!");
 
   const refreshToken = req.headers[HEADER.REFRESHTOKEN] as string;
   if (refreshToken) {

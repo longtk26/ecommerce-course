@@ -81,3 +81,7 @@
 1.  Kiểm tra refreshToken có nằm trong blacklist không --> hủy token yêu cầu đăng nhập lại
 2.  Nếu refreshToken hợp lệ --> Tìm user hợp lệ của hệ thống
 3.  Trả về cặp token mới
+
+## Day 10: Schema product
+
+1. Dùng Factory pattern cho product service

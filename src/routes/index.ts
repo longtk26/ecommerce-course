@@ -1,6 +1,7 @@
 import { Router } from "express";
-import accessRoute from "./access";
 import { apiKey, permission } from "../auth/checkAuth";
+import accessRoute from "./access";
+import productRoute from "./product";
 
 const indexRoute = Router();
 
@@ -11,5 +12,6 @@ indexRoute.use(apiKey);
 indexRoute.use(permission("0000"));
 
 indexRoute.use("/v1/api", accessRoute);
+indexRoute.use("/v1/api/product", productRoute);
 
 export default indexRoute;
