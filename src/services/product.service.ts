@@ -1,21 +1,24 @@
-import { Schema } from "mongoose";
+import { Schema, Types } from "mongoose";
 import productModel from "../models/product.model";
 import { ProductTypes } from "../types/services/product.types";
 import { BadRequestError } from "../core/error.response";
 
-const { product, electronic, clothing } = productModel;
+const { product, electronic, clothing, furniture } = productModel;
 
 // Define Factory class to create product
 class ProductFactory {
+  static productRegistry: { [id: string]: any } = {}; //key-class
+
+  static registerProductType(type: string, classRef: typeof Product) {
+    ProductFactory.productRegistry[type] = classRef;
+  }
+
   static async createProduct(type: string, payload: ProductTypes) {
-    switch (type) {
-      case "Electronic":
-        return await new Electronic(payload).createProduct();
-      case "Clothing":
-        return await new Clothing(payload).createProduct();
-      default:
-        throw new BadRequestError(`Product type ${type} is not supported!`);
-    }
+    const productClass = ProductFactory.productRegistry[type];
+    if (!productClass)
+      throw new BadRequestError(`Product type ${type} is not supported!`);
+
+    return await new productClass(payload).createProduct();
   }
 }
 
@@ -51,8 +54,8 @@ class Product {
   }
 
   //   create new product
-  async createProduct() {
-    return await product.create(this);
+  async createProduct(product_id: Types.ObjectId) {
+    return await product.create({ ...this, _id: product_id });
   }
 }
 
@@ -60,10 +63,14 @@ class Product {
 
 class Clothing extends Product {
   async createProduct() {
-    const newClothing = await clothing.create(this.product_attributes);
+    const newClothing = await clothing.create({
+      ...this.product_attributes,
+      product_shop: this.product_shop,
+    });
+
     if (!newClothing) throw new BadRequestError("Create new clothing error!");
 
-    const newProduct = await super.createProduct();
+    const newProduct = await super.createProduct(newClothing._id);
     if (!newProduct) throw new BadRequestError("Create new product error!");
 
     return newProduct;
@@ -71,18 +78,43 @@ class Clothing extends Product {
 }
 
 // Define sub-class for different product types Electronic
-
 class Electronic extends Product {
   async createProduct() {
-    const newElectronic = await electronic.create(this.product_attributes);
+    const newElectronic = await electronic.create({
+      ...this.product_attributes,
+      product_shop: this.product_shop,
+    });
+
     if (!newElectronic)
       throw new BadRequestError("Create new electronic error!");
 
-    const newProduct = await super.createProduct();
+    const newProduct = await super.createProduct(newElectronic._id);
     if (!newProduct) throw new BadRequestError("Create new product error!");
 
     return newProduct;
   }
 }
+
+// Define sub-class for different product types Furniture
+class Furniture extends Product {
+  async createProduct() {
+    const newFurniture = await furniture.create({
+      ...this.product_attributes,
+      product_shop: this.product_shop,
+    });
+
+    if (!newFurniture) throw new BadRequestError("Create new furniture error!");
+
+    const newProduct = await super.createProduct(newFurniture._id);
+    if (!newProduct) throw new BadRequestError("Create new product error!");
+
+    return newProduct;
+  }
+}
+
+// Register product type
+ProductFactory.registerProductType("Electronic", Electronic);
+ProductFactory.registerProductType("Clothing", Clothing);
+ProductFactory.registerProductType("Furniture", Furniture);
 
 export default ProductFactory;

@@ -4,10 +4,10 @@ import { CREATED, SuccessReponse } from "../core/success.response";
 
 class ProductController {
   async createProduct(req: Request, res: Response) {
-    const data = await ProductService.createProduct(
-      req.body.product_type,
-      req.body
-    );
+    const data = await ProductService.createProduct(req.body.product_type, {
+      ...req.body,
+      product_shop: req.user.userId,
+    });
 
     new CREATED({
       message: "Create new product successfully!",
