@@ -1,7 +1,24 @@
 import { Schema, Types } from "mongoose";
+
 import productModel from "../models/product.model";
 import { ProductTypes } from "../types/services/product.types";
 import { BadRequestError } from "../core/error.response";
+import {
+  findAllDraftsForShop,
+  findAllPublishForShop,
+  publishProductByShop,
+  searchProductByUser,
+  unPublishProductByShop,
+  findAllProducts,
+  findProduct,
+} from "../models/repositories/product.repo";
+import {
+  FindAllProductTypes,
+  FindProductType,
+  PublishProductTypes,
+  QueryAllDraftsTypes,
+  QueryAllPublishTypes,
+} from "../types/models/product.repo.types";
 
 const { product, electronic, clothing, furniture } = productModel;
 
@@ -19,6 +36,68 @@ class ProductFactory {
       throw new BadRequestError(`Product type ${type} is not supported!`);
 
     return await new productClass(payload).createProduct();
+  }
+
+  static async updateProduct(type: string, payload: ProductTypes) {}
+
+  // PUT //
+  static async publishProductByShop({
+    product_shop,
+    product_id,
+  }: PublishProductTypes) {
+    return await publishProductByShop({ product_shop, product_id });
+  }
+
+  static async unPublishProductByShop({
+    product_shop,
+    product_id,
+  }: PublishProductTypes) {
+    return await unPublishProductByShop({ product_shop, product_id });
+  }
+  // END PUT //
+
+  // Query
+  static async findAllDraftsForShop({
+    product_shop,
+    limit = 50,
+    skip = 0,
+  }: QueryAllDraftsTypes) {
+    const query = { product_shop, isDraft: true };
+
+    return await findAllDraftsForShop({ query, limit, skip });
+  }
+
+  static async findAllPublishForShop({
+    product_shop,
+    limit = 50,
+    skip = 0,
+  }: QueryAllPublishTypes) {
+    const query = { product_shop, isPublished: true };
+
+    return await findAllPublishForShop({ query, limit, skip });
+  }
+
+  static async searchProducts({ keySearch }: { keySearch: string }) {
+    return await searchProductByUser({ keySearch });
+  }
+
+  static async findAllProducts({
+    limit = 50,
+    sort = "ctime",
+    page = 1,
+    filter = { isPublished: true },
+  }: FindAllProductTypes) {
+    return await findAllProducts({
+      limit,
+      sort,
+      page,
+      filter,
+      select: ["product_name", "product_price", "product_thumb"],
+    });
+  }
+
+  static async findProduct({ product_id }: FindProductType) {
+    return await findProduct({ product_id, unSelect: ["__v"] });
   }
 }
 

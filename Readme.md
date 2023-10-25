@@ -86,4 +86,9 @@
 
 1. Dùng Factory pattern cho product service
 
-## Day 11:
+## Day 11: Product service
+
+1. Lấy danh sách các sản phẩm nháp của người bán.
+2. Publish một product trong danh sách nháp ra.
+3. Unpublish và search sẩn phẩm
+4. findAll, findOne, selectData, unSelectData trong Product Service API
