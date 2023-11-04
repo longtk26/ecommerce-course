@@ -25,3 +25,10 @@ export interface FindProductType {
   product_id: string;
   unSelect?: any;
 }
+
+export interface UpdateProductByIdType {
+  productId: string;
+  bodyUpdate: any;
+  model: any;
+  isNew?: boolean;
+}

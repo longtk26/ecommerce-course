@@ -15,6 +15,26 @@ class ProductController {
     }).send(res);
   }
 
+  // Update product
+
+  async updateProduct(req: Request, res: Response) {
+    const productId = req.params.productId;
+
+    const data = await ProductService.updateProduct(
+      req.body.product_type,
+      {
+        ...req.body,
+        product_shop: req.user.userId,
+      },
+      productId
+    );
+
+    new SuccessReponse({
+      message: "Updated product successfully!",
+      metadata: data,
+    }).send(res);
+  }
+
   async publishProductByShop(req: Request, res: Response) {
     const data = await ProductService.publishProductByShop({
       product_shop: req.user.userId,

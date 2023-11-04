@@ -3,6 +3,7 @@ import {
   FindAllProductTypes,
   FindProductType,
   PublishProductTypes,
+  UpdateProductByIdType,
 } from "../../types/models/product.repo.types";
 import { getSelectData, unGetSelectData } from "../../utils";
 import productModel from "../product.model";
@@ -108,6 +109,15 @@ const findProduct = async ({ product_id, unSelect }: FindProductType) => {
     .lean();
 };
 
+const updateProductById = async ({
+  productId,
+  bodyUpdate,
+  model,
+  isNew = true,
+}: UpdateProductByIdType) => {
+  return await model.findByIdAndUpdate(productId, bodyUpdate, { new: isNew });
+};
+
 const queryProduct = async ({
   query,
   limit,
@@ -137,4 +147,5 @@ export {
   searchProductByUser,
   findAllProducts,
   findProduct,
+  updateProductById,
 };

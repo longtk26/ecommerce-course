@@ -11,6 +11,7 @@ import {
   unPublishProductByShop,
   findAllProducts,
   findProduct,
+  updateProductById,
 } from "../models/repositories/product.repo";
 import {
   FindAllProductTypes,
@@ -19,6 +20,7 @@ import {
   QueryAllDraftsTypes,
   QueryAllPublishTypes,
 } from "../types/models/product.repo.types";
+import { removeUndefinedObject, updateNestedObjectParser } from "../utils";
 
 const { product, electronic, clothing, furniture } = productModel;
 
@@ -38,7 +40,17 @@ class ProductFactory {
     return await new productClass(payload).createProduct();
   }
 
-  static async updateProduct(type: string, payload: ProductTypes) {}
+  static async updateProduct(
+    type: string,
+    payload: ProductTypes,
+    productId: string
+  ) {
+    const productClass = ProductFactory.productRegistry[type];
+    if (!productClass)
+      throw new BadRequestError(`Product type ${type} is not supported!`);
+
+    return await new productClass(payload).updateProduct(productId);
+  }
 
   // PUT //
   static async publishProductByShop({
@@ -136,6 +148,15 @@ class Product {
   async createProduct(product_id: Types.ObjectId) {
     return await product.create({ ...this, _id: product_id });
   }
+
+  //  update product
+  async updateProduct(productId: string, bodyUpdate: any) {
+    return await updateProductById({
+      productId,
+      bodyUpdate,
+      model: product,
+    });
+  }
 }
 
 // Define sub-class for different product types Clothing
@@ -153,6 +174,27 @@ class Clothing extends Product {
     if (!newProduct) throw new BadRequestError("Create new product error!");
 
     return newProduct;
+  }
+
+  async updateProduct(productId: string) {
+    // 1. Rempve attributes have null and undefined values
+    // 2. Check where need to be updated
+    const objectParams = removeUndefinedObject(this);
+    if (objectParams.product_attributes) {
+      // Update child
+      await updateProductById({
+        productId,
+        bodyUpdate: updateNestedObjectParser(objectParams.product_attributes),
+        model: clothing,
+      });
+    }
+
+    const updateProduct = await super.updateProduct(
+      productId,
+      updateNestedObjectParser(objectParams)
+    );
+
+    return updateProduct;
   }
 }
 

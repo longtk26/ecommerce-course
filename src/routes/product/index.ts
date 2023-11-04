@@ -16,13 +16,19 @@ productRoute.get("/:product_id", asyncHandler(productController.findProduct));
 // Authentication
 productRoute.use(authentication);
 /////////////////////////
+
+productRoute.patch(
+  "/:productId",
+  asyncHandler(productController.updateProduct)
+);
+
 productRoute.post("/new", asyncHandler(productController.createProduct));
-productRoute.put(
+productRoute.post(
   "/publish/:id",
   asyncHandler(productController.publishProductByShop)
 );
-productRoute.put(
-  "/publish/:id",
+productRoute.post(
+  "/unpublish/:id",
   asyncHandler(productController.unPublishProductByShop)
 );
 
