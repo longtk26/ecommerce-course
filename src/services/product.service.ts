@@ -21,6 +21,7 @@ import {
   QueryAllPublishTypes,
 } from "../types/models/product.repo.types";
 import { removeUndefinedObject, updateNestedObjectParser } from "../utils";
+import { insertInventory } from "../models/repositories/inventory.repo";
 
 const { product, electronic, clothing, furniture } = productModel;
 
@@ -146,7 +147,18 @@ class Product {
 
   //   create new product
   async createProduct(product_id: Types.ObjectId) {
-    return await product.create({ ...this, _id: product_id });
+    const newProduct = await product.create({ ...this, _id: product_id });
+
+    if (newProduct) {
+      // add product_stock in inventory collection
+      await insertInventory({
+        productId: newProduct._id,
+        shopId: this.product_shop,
+        stock: this.product_quantity,
+      });
+    }
+
+    return newProduct;
   }
 
   //  update product
