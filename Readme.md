@@ -92,3 +92,6 @@
 2. Publish một product trong danh sách nháp ra.
 3. Unpublish và search sẩn phẩm
 4. findAll, findOne, selectData, unSelectData trong Product Service API
+5. Update product
+
+## Day 12: Discount model

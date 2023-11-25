@@ -139,6 +139,10 @@ const queryProduct = async ({
     .exec();
 };
 
+const findProductById = async (productId: string) => {
+  return await product.findOne({_id: productId}).lean()
+}
+
 export {
   findAllDraftsForShop,
   publishProductByShop,
@@ -148,4 +152,5 @@ export {
   findAllProducts,
   findProduct,
   updateProductById,
+  findProductById
 };
