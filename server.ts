@@ -1,4 +1,5 @@
 import app from "./src/app";
+import { createApiKey } from "./src/helpers/createApiKey";
 
 const PORT = process.env.PORT || 8080;
 

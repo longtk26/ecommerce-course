@@ -38,8 +38,6 @@ export const permission = (permission: string) => {
       throw new BadRequestError("Permission denied");
     }
 
-    console.log("permission: ", req.objKey.permissions);
-
     const validPermission = req.objKey.permissions.includes(permission);
 
     if (!validPermission) {

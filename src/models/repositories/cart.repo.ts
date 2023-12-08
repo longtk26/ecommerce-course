@@ -26,7 +26,6 @@ const addNewItemToUserCart = async ({ userId, product }: any) => {
 
 const updateUserCartQuantity = async ({ userId, product }: any) => {
   const { productId, quantity } = product;
-  console.log("quantity updated", quantity);
 
   const query = {
     cart_userId: userId,

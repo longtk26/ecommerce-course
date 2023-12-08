@@ -149,14 +149,14 @@ class Product {
   async createProduct(product_id: Types.ObjectId) {
     const newProduct = await product.create({ ...this, _id: product_id });
 
-    if (newProduct) {
-      // add product_stock in inventory collection
-      await insertInventory({
-        productId: newProduct._id,
-        shopId: this.product_shop,
-        stock: this.product_quantity,
-      });
-    }
+    // if (newProduct) {
+    //   // add product_stock in inventory collection
+    //   await insertInventory({
+    //     productId: newProduct._id,
+    //     shopId: this.product_shop,
+    //     stock: this.product_quantity,
+    //   });
+    // }
 
     return newProduct;
   }
@@ -192,6 +192,7 @@ class Clothing extends Product {
     // 1. Rempve attributes have null and undefined values
     // 2. Check where need to be updated
     const objectParams = removeUndefinedObject(this);
+    console.log(objectParams);
     if (objectParams.product_attributes) {
       // Update child
       await updateProductById({

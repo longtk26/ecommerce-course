@@ -33,6 +33,8 @@ const productSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Shop",
     },
+
+    // model, size, color, brand
     product_attributes: {
       type: Schema.Types.Mixed,
       required: true,
@@ -46,7 +48,7 @@ const productSchema = new Schema(
       max: [5, "Rating must be below 5.0"],
       set: (val: number) => Math.round(val * 10) / 10,
     },
-    product_variations: { type: Array, default: [] },
+
     isDraft: {
       type: Boolean,
       default: true,

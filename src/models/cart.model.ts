@@ -20,7 +20,6 @@ const cartSchema = new Schema(
     },
     cart_amount_products: {
       type: Number,
-      required: true,
     },
   },
   {

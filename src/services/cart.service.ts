@@ -28,7 +28,6 @@ class CartService {
         (item) => item.productId === product.productId
       )
     ) {
-      console.log("here");
       return await addNewItemToUserCart({ userId: userId, product });
     }
 
