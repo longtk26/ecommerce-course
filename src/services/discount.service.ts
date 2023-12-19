@@ -80,13 +80,7 @@ class DiscountService {
 
   static async updateDiscountCode() {}
 
-  static async getAllDiscountCodesWithProduct({
-    code,
-    shopId,
-    userId,
-    limit,
-    page,
-  }: any) {
+  static async getProductsByDiscountCode({ code, shopId, limit, page }: any) {
     // Create index for discount_code
     const foundDiscount = await discount
       .findOne({
