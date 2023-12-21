@@ -7,6 +7,7 @@ import {
 } from "../../types/models/product.repo.types";
 import { getSelectData, unGetSelectData } from "../../utils";
 import productModel from "../product.model";
+import { ProductType } from "../../types/services/discount.types";
 
 const { product, electronic, clothing, furniture } = productModel;
 
@@ -140,8 +141,33 @@ const queryProduct = async ({
 };
 
 const findProductById = async (productId: string) => {
-  return await product.findOne({_id: productId}).lean()
-}
+  return await product.findOne({ _id: productId }).lean();
+};
+
+const checkProductsByServer = async (
+  products: ProductType[]
+): Promise<ProductType[]> => {
+  const productsDb = Promise.all(
+    products.map(async (product) => {
+      const foundProduct = await findProductById(product.productId);
+      if (foundProduct) {
+        return {
+          productId: product.productId,
+          price: +foundProduct.product_price,
+          quantity: +product.quantity,
+        };
+      } else {
+        return {
+          productId: product.productId,
+          price: -1,
+          quantity: +product.quantity,
+        };
+      }
+    })
+  );
+
+  return productsDb;
+};
 
 export {
   findAllDraftsForShop,
@@ -152,5 +178,6 @@ export {
   findAllProducts,
   findProduct,
   updateProductById,
-  findProductById
+  findProductById,
+  checkProductsByServer,
 };

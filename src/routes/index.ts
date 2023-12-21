@@ -4,6 +4,7 @@ import accessRoute from "./access";
 import productRoute from "./product";
 import cartRouter from "./cart";
 import discountRoute from "./discount";
+import orderRoute from "./order";
 
 const indexRoute = Router();
 
@@ -17,5 +18,6 @@ indexRoute.use("/v1/api/product", productRoute);
 indexRoute.use("/v1/api/discount", discountRoute);
 indexRoute.use("/v1/api", accessRoute);
 indexRoute.use("/v1/api/cart", cartRouter);
+indexRoute.use("/v1/api/order", orderRoute);
 
 export default indexRoute;

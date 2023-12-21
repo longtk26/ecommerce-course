@@ -18,5 +18,17 @@ discountRoute.get(
 );
 
 discountRoute.post("/new", asyncHandler(discountController.createDiscountCode));
+discountRoute.post(
+  "/apply",
+  asyncHandler(discountController.applyDiscountCode)
+);
+discountRoute.patch(
+  "/cancel",
+  asyncHandler(discountController.cancelDiscountCode)
+);
+discountRoute.delete(
+  "/:codeId",
+  asyncHandler(discountController.deleteDiscountCode)
+);
 
 export default discountRoute;

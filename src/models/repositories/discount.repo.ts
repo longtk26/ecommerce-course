@@ -1,4 +1,5 @@
 import { getSelectData, unGetSelectData } from "../../utils";
+import discount from "../discount.model";
 
 const findAllDiscountCodesUnselect = async ({
   limit = 50,
@@ -46,4 +47,12 @@ const findAllDiscountCodesSelect = async ({
   return documents;
 };
 
-export { findAllDiscountCodesUnselect, findAllDiscountCodesSelect };
+const checkDiscountExist = async (model: any, filter: any) => {
+  return await discount.findOne(filter);
+};
+
+export {
+  findAllDiscountCodesUnselect,
+  findAllDiscountCodesSelect,
+  checkDiscountExist,
+};

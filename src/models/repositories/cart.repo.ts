@@ -44,4 +44,13 @@ const updateUserCartQuantity = async ({ userId, product }: any) => {
   return await cart.findOneAndUpdate(query, updateSet, options);
 };
 
-export { createUserCart, updateUserCartQuantity, addNewItemToUserCart };
+const findCartById = async (cartId: string) => {
+  return await cart.findOne({ _id: cartId, cart_status: "active" });
+};
+
+export {
+  createUserCart,
+  updateUserCartQuantity,
+  addNewItemToUserCart,
+  findCartById,
+};
