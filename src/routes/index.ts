@@ -6,8 +6,12 @@ import cartRouter from "./cart";
 import discountRoute from "./discount";
 import orderRoute from "./order";
 import invenRoute from "./inventory";
+import { pushToLogDiscord } from "../middlewares";
 
 const indexRoute = Router();
+
+// Add log to discord
+indexRoute.use(pushToLogDiscord);
 
 // check API key
 indexRoute.use(apiKey);
