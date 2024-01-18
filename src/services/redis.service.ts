@@ -1,4 +1,4 @@
-import { createClient } from "redis";
+import { ErrorReply, createClient } from "redis";
 import { promisify } from "util";
 import { reservationInventory } from "../models/repositories/inventory.repo";
 

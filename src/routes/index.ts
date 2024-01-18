@@ -7,6 +7,7 @@ import discountRoute from "./discount";
 import orderRoute from "./order";
 import invenRoute from "./inventory";
 import { pushToLogDiscord } from "../middlewares";
+import commentRoute from "./comment";
 
 const indexRoute = Router();
 
@@ -25,5 +26,6 @@ indexRoute.use("/v1/api", accessRoute);
 indexRoute.use("/v1/api/cart", cartRouter);
 indexRoute.use("/v1/api/order", orderRoute);
 indexRoute.use("/v1/api/inventory", invenRoute);
+indexRoute.use("/v1/api/comment", commentRoute);
 
 export default indexRoute;
